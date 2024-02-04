@@ -1,0 +1,87 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Your Image</title>
+</head>
+
+<body>
+    <h1>Upload Your Image Here</h1>
+    
+    <!-- Button 1 -->
+    <label for="fileInput1">Corona</label>
+    <input type="file" id="fileInput1" accept=".jpeg, .jpg, .png">
+    <button onclick="processButton('Button 1', 'fileInput1')">Submit</button><br>
+
+    <!-- Button 2 -->
+    <label for="fileInput2">CTSCAN</label>
+    <input type="file" id="fileInput2" accept=".jpeg, .jpg, .png">
+    <button onclick="processButton('Button 2', 'fileInput2')">Submit</button><br>
+
+    <!-- Button 3 -->
+    <label for="fileInput3">XRAY</label>
+    <input type="file" id="fileInput3" accept=".jpeg, .jpg, .png">
+    <button onclick="processButton('Button 3', 'fileInput3')">Submit</button>
+
+    <div id="outputScreen"></div>
+
+    <script>
+        function processButton(buttonLabel, fileInputId) {
+            var fileInput = document.getElementById(fileInputId);
+            var outputScreen = document.getElementById('outputScreen');
+
+            // Check if a file is selected
+            
+            if (fileInput.files.length > 0) {
+                var selectedFile = fileInput.files[0];
+
+                // Create a FormData object to send the file
+                var formData = new FormData();
+                formData.append('file', selectedFile);
+                console.log(formData);
+                var requestOptions = {
+                                method: 'POST',
+                                redirect: 'follow'
+                                };
+
+                // Make a POST request to Flask
+                fetch('http://localhost:8080/upload', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.text())
+                
+                .then(result => {
+
+                    console.log(result);
+
+                    
+
+
+                    this.outputScreen.innerHTML =result;
+
+                    
+
+                    })
+                // outputScreen.innerHTML = Result for ${buttonLabel}: ${JSON.stringify(result)};)
+                .then(data => {
+                    // Display the result on the output screen
+                    // outputScreen.innerHTML =  ${data.result};
+
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            } else {
+                outputScreen.innerHTML = 'Please choose a file.';
+            }
+        }
+
+
+    </script>
+</body>
+
+</html>
